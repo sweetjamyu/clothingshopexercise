@@ -1,43 +1,51 @@
-import { AddButton,SubTitle,TextContainer,Title,Wrapper } from './ProductCard.styled';
-import { useState, useEffect} from "react";
-import styled from "styled-components";
-import useShop from "../../ShopContext";
+import {
+  AddButton,
+  SubTitle,
+  TextContainer,
+  Title,
+  Wrapper,
+} from './ProductCard.styled';
+
 import { Product } from '../../models';
+import { useState, useEffect, useContext } from 'react';
+import { ShopContext} from "../../UseContext";
 
-
-  export const ProductCard = ({ name, imageUrl, price }: Product) => {
-  const { products, addToCart, removeFromCart} = useShop();
+export const ProductCard = ({ name, imageUrl, price}: Product) => {
+  const {products, removeItem, addToCart} = useContext(ShopContext);
   const [isInCart, setIsInCart] = useState(false);
-
+  const [isInWish, setIsInWish] = useState(false);
+  
   useEffect(() => {
-    const productIsInCart = products.find((product: { name: string; }) => product.name === name);
+    const cartItems = products.find((product: { name: string; }) => product.name === name);
 
-    if (productIsInCart) {
+    if (cartItems) {
       setIsInCart(true);
-    } else {
+
+    }else if(!cartItems){
       setIsInCart(false);
     }
-  }, [products, name]);
-
-  const handleClick = () => {
-    const product = { name, imageUrl, price };
-
-    if (isInCart) {
-      removeFromCart(product);
-    } else {
+  }, [products,name]);
+  
+  const handleCart = () => {
+    const product = {name, imageUrl, price};
+    if(isInCart){
+      removeItem(product);
+     
+    } else{
       addToCart(product);
+      
     }
-  };
+  }
+
   return (
     <Wrapper background={imageUrl}>
-      <AddButton isInCart={isInCart} onClick={handleClick}>
-      <p>{isInCart ? "-" : "+"}</p>
+      <AddButton isInCart={isInCart} onClick={handleCart}>
+        <p>{isInCart?  "-" : "+"}</p>
       </AddButton>
       <TextContainer>
         <Title>{name}</Title>
-        <SubTitle>{price}.00$</SubTitle>
+        <SubTitle>${price}.00</SubTitle>
       </TextContainer>
     </Wrapper>
   );
 };
-export default ProductCard;
