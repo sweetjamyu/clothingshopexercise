@@ -1,11 +1,13 @@
 import { Link, Route, Routes } from 'react-router-dom';
 import { LinksWrapper, TitleWrapper, Wrapper } from './App.styled';
-
 import { Cart } from '../Cart';
 import { Products } from '../Products';
+import { ShopProvider } from '../../ShopContext';
+
 
 export const App = () => {
   return (
+    <ShopProvider>
     <Wrapper>
       <TitleWrapper>
         <h1>Clothing Shop Starter Project</h1>
@@ -19,5 +21,7 @@ export const App = () => {
         <Route path='/cart' element={<Cart />} />
       </Routes>
     </Wrapper>
+    </ShopProvider>
   );
-};
+}; 
+export default App;
